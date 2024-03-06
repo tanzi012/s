@@ -1,4 +1,4 @@
-prac1
+prac2
     r1 ,r2,r3
 config t
 line vty 0 4
@@ -31,3 +31,16 @@ ip ospf message-digest-key 1 md5 MDpa55
  aaa new-model
 aaa authentication login default local
 line console 0
+aaa login authentication default
+end 
+
+config t
+ip domain name ccnasecurity.com
+crypto key generate rsa
+aaa authentication default SSH-LOGIN 
+line vty 0 4
+login authentication SSH-LOGIN 
+transport input ssh
+
+cp 
+ssh -l Admin 192.168.1.1
