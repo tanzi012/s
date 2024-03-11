@@ -1,0 +1,113 @@
+1. Configure, Apply and Verify an Extended Numbered ACL
+
+Device on one LAN are allowed to remotely access device in 
+another LAN using SSH protocol
+o Besides ICMP all traffic from other network is denied
+
+ imp -  the IP address on switch
+int vlan 1
+ip address 10.101.117.50 255.255.255.248
+no shut
+ip default-gateway 10.101.117.49
+
+int vlan 1
+ip address 10.101.117.34 255.255.255.240
+no shut
+ip default-gateway 10.101.117.33
+
+int vlan 1
+ip address 10.101.117.2 255.255.255.224
+no shut
+ip default-gateway 10.101.117.1
+
+ Configure the secret on router and switch
+RTA/SW(config)# enable secret enpa55
+
+Configure the console password on router and switch
+line console 0
+password tyit
+login
+
+Ping from PCA to PC-B.
+PCA>ping 10.101.117.35
+(Successful)
+Ping from PCA to SWC.
+PCA>ping 10.101.117.2
+(Successful)
+Ping from PCB to SWC.
+PCB>ping 10.101.117.2
+(Successful)
+
+ Configure domain name and crypto key for use with SSH.
+RTA/SW(config)# ip domain-name ccnasecurity.com
+
+Configure users to login to SSH
+RTA/SW(config)# username admin secret adminpa55
+
+ Configure incoming vty lines
+RTA/SW(config)# line vty 0 4
+RTA/SW(config-line)# login local
+RTA/SW(config)# crypto key generate rsa
+How many bits in the modulus [512]: 1024
+
+Verify the SSH Connection
+PCA> ssh -l Admin 10.101.117.34
+Password: adminpa55
+
+SWB>
+PCA> ssh -l Admin 10.101.117.2
+Password: adminpa55
+SWC>
+PCB> ssh -l Admin 10.101.117.50
+Password: adminpa55
+SWA>
+PCB> ssh -l Admin 10.101.117.2
+Password: adminpa55
+SWC>
+SWC> ssh -l Admin 10.101.117.50
+Password: adminpa55
+SWA>
+SWC> ssh -l Admin 10.101.117.34
+Password: adminpa55
+SWB>
+SWB> exit
+
+Configure, Apply and Verify an Extended Numbered 
+ACL
+Step 1: Configure the extended ACL.
+RTA(config)# access-list 199 permit tcp 10.101.117.32 0.0.0.15 10.101.117.0 0.0.0.31 eq 22
+RTA(config)# access-list 199 permit icmp any any
+
+Apply the extended ACL.
+RTA(config)# int gig0/2
+RTA(config-if)# ip access-group 199 out
+ Ping from PCB to all of the other IP addresses in the network.
+PCB> ping 10.101.117.51
+(Successful)
+PCB> ping 10.101.117.2
+(Successful)
+
+PCB> ssh -l Admin 10.101.117.2
+Password:adminpa55
+SWC>
+c. Exit the SSH session to SWC.
+SWC>exit
+d. Ping from PCA to all of the other IP addresses in the network.
+PCA> ping 10.101.117.35
+(Successful)
+PCA> ping 10.101.117.2
+(Successful)
+e. SSH from PCA to SWC
+PCA> ssh -l Admin 10.101.117.2
+
+conn time out
+
+f. SSH from PCA to SWB.
+PCA> ssh -l Admin 10.101.117.34
+Password: adminpa55
+SWB>
+g. After logging into SWB, do not log out. SSH to SWC in privileged EXEC 
+mode.
+SWB# ssh -l Admin 10.101.117.2
+Password: adminpa55
+SWC>
