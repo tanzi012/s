@@ -1,0 +1,118 @@
+ Configure IOS Intrusion Prevention System (IPS) 
+Using the CLI
+
+Enable IOS IPS. 
+• Configure logging. 
+• Modify an IPS signature. 
+• Verify IPS
+
+ Configure secret on router
+Execute command on all routers 
+R(config)# enable secret enpa55
+
+Execute command on all routers
+R(config)# line console 0
+R(config-line)# password conpa55
+R(config-line)# login
+
+Execute command on all routers
+R(config)# ip domain-name ccnasecurity.com
+R(config)# username admin secret adminpa55
+R(config)# line vty 0 4
+R(config-line)# login local
+R(config)# crypto key generate rsa
+How many bits in the modulus [512]: 1024
+
+Execute command on router 1
+R1(config)#router ospf 1
+R1(config-router)# network 192.168.1.0 0.0.0.255 area 0
+R1(config-router)# network 10.1.1.0 0.0.0.3 area 0
+
+Execute command on router 2
+R2(config)#router ospf 1
+R2(config-router)# network 10.1.1.0 0.0.0.3 area 0
+R2(config-router)# network 10.2.2.0 0.0.0.3 area 0
+
+Execute command on router 3
+R3(config)#router ospf 1
+R3(config-router)# network 10.2.2.0 0.0.0.3 area 0
+R3(config-router)# network 192.168.3.0 0.0.0.255 area 0
+
+Enable IOS IPS
+
+Enable the Security Technology package
+R1# show version
+
+R1(config)# license boot module c1900 technology-package securityk9
+(Type yes)
+R1# copy run start
+R1# reload
+R1# show version
+
+Verify network connectivity
+PCA> ping 192.168.3.2
+(Successful)
+PCC> ping 192.168.1.2
+(Successful)
+
+Create an IOS IPS configuration directory in flash.
+R1# mkdir ipsdir
+Create directory filename [ipsdir]? <Enter>
+
+ Configure the IPS signature storage location.
+R1(config)# ip ips config location flash:ipsdir
+
+Create an IPS rule
+R1(config)# ip ips name iosips
+
+ Enable logging.
+R1(config)# ip ips notify log
+R1# clock set hr:min:sec date month year
+R1(config)# service timestamps log datetime msec
+R1(config)# logging host 192.168.1.50
+
+Configure IOS IPS to use the signature categories.
+R1(config)# ip ips signature-category
+R1(config-ips-category)# category all
+R1(config-ips-category-action)# retired true
+
+R1(config-ips-category-action)# exit
+R1(config-ips-category)# category ios_ips basic
+R1(config-ips-category-action)# retired false
+R1(config-ips-category-action)# exit
+R1(config-ips-cateogry)# exit
+Do you want to accept these changes? [confirm] <Enter>
+R1(config)# int gig0/0
+R1(config-if)# ip ips iosips out
+
+Use show commands to verify IPS.
+R1# show ip ips all
+(Output)
+View the syslog messages.
+Click the Syslog server->Services tab-> SYSLOG
+(Output)
+
+Change the event-action of a signature.
+R1(config)# ip ips signature-definition
+R1(config-sigdef)# signature 2004 0
+R1(config-sigdef-sig)# status
+R1(config-sigdef-sig-status)# retired false
+R1(config-sigdef-sig-status)# enabled true
+R1(config-sigdef-sig-status)# exit
+R1(config-sigdef-sig)# engine
+
+R1(config-sigdef-sig-engine)# event-action produce-alert
+R1(config-sigdef-sig-engine)# event-action deny-packet-inline
+R1(config-sigdef-sig-engine)# exit
+R1(config-sigdef-sig)# exit
+R1(config-sigdef)# exit
+Do you want to accept these changes? [confirm] <Enter>
+
+ Use show commands to verify IPS.
+R1# show ip ips all
+(Output)
+Step 3: Verify that IPS is working properly.
+PCC> ping 192.168.1.2(Unsuccessful – Request timed out)
+PCA> ping 192.168.3.2(Successful)
+Step 4: View the syslog messages.
+Click the Syslog server->Services tab-> SYSLOG
