@@ -1,0 +1,52 @@
+PC1 Should be allowed only FTP access
+o PC2 Should be allowed only web access
+o Both PCs must ping server but not each other’s
+
+
+line vty 0 4
+password vtypa55
+login
+exit
+enable secret enpa55
+
+acl to permit ftp and icmp
+
+access-list 100 permit tcp 172.22.34.64 0.0.0.31 host 172.22.34.62 eq ftp
+
+access-list 100 permit icmp 172.22.34.64 0.0.0.31 host 172.22.34.62 
+
+
+int gig 0/0
+ip access-group 100 in
+
+pc1
+ping 172.22.34.62
+Successful
+
+ftp 172.22.34.62
+
+quit
+
+ping 172.22.34.98
+
+Unsuccessful unrea
+
+ Configure an ACL to permit HTTP access and ICMP.
+ip access-list extended HTTP_ONLY
+permit tcp 172.22.34.96 0.0.0.15 host 172.22.34.62 eq www
+permit icmp 172.22.34.96 0.0.0.15 host 172.22.34.62
+
+int gig0/1
+ip access-group extended HTTP-ONLY in
+
+ping 172.22.34.62 Successful
+ftp 172.22.34.62 Unsuccessful
+http://172.22.34.62 Successful
+ping 172.22.34.66 Unsuccessful
+
+
+
+
+
+
+
