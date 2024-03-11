@@ -1,3 +1,13 @@
+R1
+gig0/0 172.22.34.65 255.255.255.224 N/A
+gig0/1 172.22.34.97 255.255.255.240 N/A
+ gig0/2 172.22.34.1 255.255.255.192 N/A
+Server NIC 172.22.34.62 255.255.255.192 172.22.34.1
+PC1 NIC 172.22.34.66 255.255.255.224 172.22.34.65
+PC2 NIC 172.22.34.98 255.255.255.240 172.22.34.97
+
+
+
 PC1 Should be allowed only FTP access
 o PC2 Should be allowed only web access
 o Both PCs must ping server but not each other’s
