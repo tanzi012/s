@@ -1,0 +1,22 @@
+Configure IP ACLs to Mitigate Attacks
+
+Verify connectivity among devices before firewall configuration.
+• Use ACLs to ensure remote access to the routers is available only from 
+management station PC-C.
+• Configure ACLs on R1 and R3 to mitigate attacks.
+• Verify ACL functionality
+
+R(config) # enable secret enpa55
+
+R(config) # line console 0
+R(config-line) #password conpa55
+R(config-line) #login
+
+Execute command on all routers
+R(config)# ip domain-name ccnasecurity.com
+R(config)# username admin secret adminpa55
+R(config)# line vty 0 4
+R(config-line)# login local
+R(config-line)# crypto key generate rsa
+How many bits in the modulus [512]: 1024
+
