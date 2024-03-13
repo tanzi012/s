@@ -43,6 +43,50 @@ qualityTrain = subset(quality, split == TRUE)
 
  
 
- 
+ > predictTrain = predict(QualityLog, type="response") 
+> summary(predictTrain)  
+
+
+> tapply(predictTrain, qualityTrain$PoorCare, mean) 
+
+> table(qualityTrain$PoorCare, predictTrain > 0.5) 
+
+> 10/25 
+[1] 0.4 
+
+> 70/74 
+[1] 0.9459459 
+
+> table(qualityTrain$PoorCare, predictTrain > 0.7) 
+FALSE TRUE 
+0 73 1 
+1 17 8 
+
+> 8/25 
+[1] 0.32 
+
+> 73/74 
+[1] 0.9864865 
+
+> table(qualityTrain$PoorCare, predictTrain > 0.2) 
+
+
+> 16/25 
+[1] 0.64 
+
+> 54/74 
+[1] 0.7297297 
+
+> install.packages("ROCR") 
+
+
+> library(ROCR) 
+
+
+> ROCRpred = prediction(predictTrain, qualityTrain$PoorCare) 
+
+> ROCRperf = performance(ROCRpred, "tpr", "fpr") 
+
+> plot(ROCRperf)
 
 
