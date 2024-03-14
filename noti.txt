@@ -1,0 +1,58 @@
+airplanemode.java
+
+package com.example.myapplication;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.provider.Settings;
+import android.widget.Toast;
+
+public class airplanemode extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (isAirplanemodeon(context.getApplicationContext())){
+            Toast.makeText(context, "on", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(context, "off", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private static Boolean isAirplanemodeon(Context context ){
+        return Settings.System.getInt(context.getContentResolver(),Settings.Global.AIRPLANE_MODE_ON,0) !=0;
+
+    }
+}
+
+
+package com.example.myapplication;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+
+public class MainActivity extends AppCompatActivity {
+airplanemode airplanemode=new airplanemode();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter=new IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+        registerReceiver(airplanemode,filter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(airplanemode);
+    }
+}
