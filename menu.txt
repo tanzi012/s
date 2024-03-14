@@ -1,0 +1,18 @@
+public boolean onCreateOptionsMenu(Menu menu) {
+        //return super.onCreateOptionsMenu(menu);
+    getMenuInflater().inflate(R.menu.me,menu);
+    return true;
+    }
+
+
+     int id = item.getItemId();
+       if(id==R.id.open){
+           Toast.makeText(this, "Item 1 selected", Toast.LENGTH_SHORT).show();
+       }
+       if (id==R.id.openas){
+           Toast.makeText(this, "item 2", Toast.LENGTH_SHORT).show();
+       }
+       else{
+           Toast.makeText(this, "item 3", Toast.LENGTH_SHORT).show();
+       }
+        return super.onOptionsItemSelected(item);
