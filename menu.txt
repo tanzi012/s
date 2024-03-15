@@ -1,18 +1,48 @@
-public boolean onCreateOptionsMenu(Menu menu) {
-        //return super.onCreateOptionsMenu(menu);
-    getMenuInflater().inflate(R.menu.me,menu);
-    return true;
+menus.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/open" android:title="Open"></item>
+    <item android:id="@+id/save" android:title="Save"></item>
+    <item android:id="@+id/saveas" android:title="Save As"></item>
+    <item android:id="@+id/search" android:title="Search"></item>
+    <item android:id="@+id/cmail" android:title="Compose Mail" android:enabled="false"></item>
+
+</menu>
+
+MainActivity.java
+@Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater mi = getMenuInflater();
+        mi.inflate(R.menu.menus,menu);
+        return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        switch(item.getItemId())
+        {
+            case R.id.open:
+                Toast.makeText(this, "Open Option is selected", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.save:
+                Toast.makeText(this, "Save option is selected", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.saveas:
+                Toast.makeText(this, "Save As Option is Selected", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.search:
+                Toast.makeText(this, "Search Optio  is Selected", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.cmail:
+                Toast.makeText(this, "Compose Email is Selected", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                Toast.makeText(this, "Default", Toast.LENGTH_SHORT).show();
+                return super.onOptionsItemSelected(item);
 
-     int id = item.getItemId();
-       if(id==R.id.open){
-           Toast.makeText(this, "Item 1 selected", Toast.LENGTH_SHORT).show();
-       }
-       if (id==R.id.openas){
-           Toast.makeText(this, "item 2", Toast.LENGTH_SHORT).show();
-       }
-       else{
-           Toast.makeText(this, "item 3", Toast.LENGTH_SHORT).show();
-       }
-        return super.onOptionsItemSelected(item);
+
+        }
+    }
